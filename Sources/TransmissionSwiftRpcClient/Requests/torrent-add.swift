@@ -20,7 +20,7 @@ public struct AddTorrentResponseArguments: Decodable {
 public extension TransmissionSwiftRpcClient {
   func addTorrent(
     _ arguments: AddTorrentRequestArguments,
-    tag: TransmissionRequestTag?
+    tag: TransmissionRequestTag? = nil
   ) -> AnyPublisher<TransmissionResponse<AddTorrentResponseArguments>, TransmissionError> {
     rpc(method: .addTorrent, tag: tag, arguments: arguments)
   }
