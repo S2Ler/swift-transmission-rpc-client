@@ -14,9 +14,8 @@ public struct TransmissionResponse<Arguments: Decodable>: Decodable {
       self.result = .failure(.init(description: rawResult))
     }
 
-    self.tag = try container.decode(TransmissionRequestTag.self, forKey: .tag)
-
-    self.arguments = try container.decode(Arguments.self, forKey: .arguments)
+    self.tag = try container.decodeIfPresent(TransmissionRequestTag.self, forKey: .tag)
+    self.arguments = try container.decodeIfPresent(Arguments.self, forKey: .arguments)
   }
 
   private enum CodingKeys: String, CodingKey {
