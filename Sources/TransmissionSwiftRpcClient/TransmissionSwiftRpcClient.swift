@@ -26,6 +26,9 @@ public class TransmissionSwiftRpcClient {
   private let configuration: Configuration
   private let dispatcher: Networker.Dispatcher
 
+  @RWAtomic
+  private var sessionId: String = ""
+
   public init(
     configuration: Configuration,
     dispatcher: Networker.Dispatcher
@@ -37,32 +40,56 @@ public class TransmissionSwiftRpcClient {
   public init(configuration: Configuration = .default) {
     self.configuration = .default
     self.dispatcher = Self.createDispatcher()
+
+    dispatcher.add(sessionIdPluging())
   }
 
   internal func rpc<RequestArguments, ResponseArguments>(
     method: RpcMethod,
     tag: TransmissionRequestTag?,
     arguments: RequestArguments?
-  ) -> AnyPublisher<TransmissionResponse<ResponseArguments>, TransmissionError>
+  ) -> AnyPublisher<TransmissionResponse<ResponseArguments>, Error>
     where
     RequestArguments: Encodable,
     ResponseArguments: Decodable
   {
     let body = TransmissionRpcBody<RequestArguments>(arguments: arguments, tag: tag, method: method)
-      let request: TransmissionRequest<RequestArguments, ResponseArguments> = .init(
-        baseUrl: configuration.rpcUrl,
-        path: "",
-        urlParams: nil,
-        httpMethod: .post,
-        body: .json(body),
-        headers: [:],
-        timeout: configuration.timeout,
-        cachePolicy: configuration.cachePolicy
-      )
-      return dispatcher.dispatch(request)
+    let request: TransmissionRequest<RequestArguments, ResponseArguments> = .init(
+      baseUrl: configuration.rpcUrl,
+      path: "",
+      urlParams: nil,
+      httpMethod: .post,
+      body: .json(body),
+      headers: [:],
+      timeout: configuration.timeout,
+      cachePolicy: configuration.cachePolicy
+    )
+    return dispatcher
+      .dispatch(request)
+      .catch { [unowned self] (error: Error) -> AnyPublisher<TransmissionResponse<ResponseArguments>, Error> in
+        if let transmissionError = error as? TransmissionError {
+          if case .statusCodeError(let httpResponse) = transmissionError,
+            httpResponse.statusCode == 409 {
+            self.sessionId = httpResponse.value(forHTTPHeaderField: "X-Transmission-Session-Id") ?? ""
+            return self.dispatcher.dispatch(request)
+          }
+          else {
+            return Fail(error: transmissionError).eraseToAnyPublisher()
+          }
+        }
+        else {
+          return Fail(error: error).eraseToAnyPublisher()
+        }
+    }.eraseToAnyPublisher()
   }
 
   private static func createDispatcher() -> Dispatcher {
-    URLSessionDispatcher(plugins: [])
+    URLSessionDispatcher(jsonBodyEncoder: JSONEncoder(),
+                         plugins: [])
+  }
+
+  private func sessionIdPluging() -> DispatcherPlugin {
+    InjectHeaderPlugin(headerField: "X-Transmission-Session-Id",
+                       dynamicValue: { [weak self] in self?.sessionId ?? "" })
   }
 }
