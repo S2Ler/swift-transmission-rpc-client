@@ -6,8 +6,8 @@ public struct AddTorrentRequestArguments: Encodable {
   public let isPaused: Bool
   public let downloadFolderUrl: URL
 
-  public init(content: String, isPaused: Bool, downloadFolderUrl: URL) {
-    self.metainfo = Data(content.utf8).base64EncodedString()
+  public init(content: Data, isPaused: Bool, downloadFolderUrl: URL) {
+    self.metainfo = content.base64EncodedString()
     self.isPaused = isPaused
     self.downloadFolderUrl = downloadFolderUrl
   }
