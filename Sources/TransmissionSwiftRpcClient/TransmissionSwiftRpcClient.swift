@@ -35,13 +35,11 @@ public class TransmissionSwiftRpcClient {
   ) {
     self.configuration = configuration
     self.dispatcher = dispatcher
+    dispatcher.add(sessionIdPluging())
   }
 
-  public init(configuration: Configuration = .default) {
-    self.configuration = .default
-    self.dispatcher = Self.createDispatcher()
-
-    dispatcher.add(sessionIdPluging())
+  public convenience init(configuration: Configuration = .default) {
+    self.init(configuration: configuration, dispatcher: Self.createDispatcher())
   }
 
   internal func rpc<RequestArguments, ResponseArguments>(
