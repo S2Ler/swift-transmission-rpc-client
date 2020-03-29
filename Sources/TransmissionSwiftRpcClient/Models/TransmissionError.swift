@@ -14,7 +14,7 @@ extension TransmissionError: LocalizedError {
     case .transportError(let error):
       return "Transport Error: \(error)"
     case .decodingError(let error):
-      return "Decoding Error: \(error)"
+      return "\(error)"
     }
   }
 }
