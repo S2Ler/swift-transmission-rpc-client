@@ -22,6 +22,9 @@ public struct AddTorrentResponseArguments: Decodable {
 
   private let torrentAddedInfo: TorrentAddedInfo?
   private let torrentDuplicateInfo: TorrentAddedInfo?
+
+  /// A convenient property which returns non-optional `TorrentAddedInfo`.
+  /// - note: `torrent-add` response can have either `torrentAddedInfo` value or `torrentDuplicateInfo`.
   private var unwrappedTorrentInfo: TorrentAddedInfo {
     if let torrentAddedInfo = torrentAddedInfo {
       return torrentAddedInfo
@@ -39,12 +42,16 @@ public struct AddTorrentResponseArguments: Decodable {
     case torrentDuplicateInfo = "torrent-duplicate"
   }
 
+  /// Indicates if added torrent already exists in the list of torrents
   public var isDuplicate: Bool { torrentDuplicateInfo != nil }
 
+  /// Added torrent hash
   public var hashString: String { unwrappedTorrentInfo.hashString }
 
+  /// Added torrent id
   public var id: Int { unwrappedTorrentInfo.id }
 
+  /// Name of the added torrent
   public var name: String { unwrappedTorrentInfo.name }
 }
 
