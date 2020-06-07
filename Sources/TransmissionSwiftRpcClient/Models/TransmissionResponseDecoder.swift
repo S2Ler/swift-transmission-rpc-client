@@ -14,8 +14,7 @@ internal struct TransmissionResponseDecoder: ResponseDecoder {
         return .failure(.statusCodeError(httpResponse))
       }
 
-      let decoder = JSONDecoder()
-      decoder.dateDecodingStrategy = .secondsSince1970
+      let decoder = TransmissionJSONDecoder()
       guard let data = data else {
         return .failure(.transportError(URLError.init(.networkConnectionLost)))
       }

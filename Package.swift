@@ -13,6 +13,8 @@ let package = Package(
     .library(
       name: "TransmissionSwiftRpcClient",
       targets: ["TransmissionSwiftRpcClient"]),
+    .executable(name: "ClientPlayground",
+                targets: ["ClientPlayground"])
   ],
   dependencies: [
     .package(url: "https://github.com/diejmon/Networker.git", .branch("master"))
@@ -21,5 +23,8 @@ let package = Package(
     .target(
       name: "TransmissionSwiftRpcClient",
       dependencies: ["Networker"]),
+    .target(
+      name: "ClientPlayground",
+      dependencies: ["TransmissionSwiftRpcClient"]),
   ]
 )

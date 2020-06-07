@@ -1,4 +1,4 @@
-public struct TransmissionRequestTag: Codable {
+public struct TransmissionRequestTag: Codable, Equatable, Hashable {
   public let rawTag: Int
 
   public init(rawTag: Int) {

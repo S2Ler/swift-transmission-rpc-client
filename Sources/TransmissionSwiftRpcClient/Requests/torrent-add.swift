@@ -15,8 +15,8 @@ public struct AddTorrentRequestArguments: Encodable {
 
 public struct AddTorrentResponseArguments: Decodable {
   private struct TorrentAddedInfo: Decodable {
-    let hashString: String
-    let id: Int
+    let hash: TorrentHash
+    let id: TorrentId
     let name: String
   }
 
@@ -46,10 +46,10 @@ public struct AddTorrentResponseArguments: Decodable {
   public var isDuplicate: Bool { torrentDuplicateInfo != nil }
 
   /// Added torrent hash
-  public var hashString: String { unwrappedTorrentInfo.hashString }
+  public var hash: TorrentHash { unwrappedTorrentInfo.hash }
 
   /// Added torrent id
-  public var id: Int { unwrappedTorrentInfo.id }
+  public var id: TorrentId { unwrappedTorrentInfo.id }
 
   /// Name of the added torrent
   public var name: String { unwrappedTorrentInfo.name }
