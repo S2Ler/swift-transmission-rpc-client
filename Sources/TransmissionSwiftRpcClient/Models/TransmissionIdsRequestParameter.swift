@@ -15,6 +15,7 @@ public enum TransmissionIdsRequestParameter: Encodable {
       }
     }
   }
+  case allTorrents
   case torrent(id: TorrentId)
   case torrentIds([TorrentId])
   case torrentHashes([TorrentHash])
@@ -23,6 +24,8 @@ public enum TransmissionIdsRequestParameter: Encodable {
 
   public func encode(to encoder: Encoder) throws {
     switch self {
+    case .allTorrents:
+      break
     case .torrent(id: let torrentId):
       var container = encoder.singleValueContainer()
       try container.encode(torrentId)

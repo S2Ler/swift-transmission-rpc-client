@@ -18,7 +18,7 @@ internal struct TransmissionResponseDecoder: ResponseDecoder {
       guard let data = data else {
         return .failure(.transportError(URLError.init(.networkConnectionLost)))
       }
-      
+
       let decodedValue = try decoder.decode(T.self, from: data)
       return .success(decodedValue)
     }

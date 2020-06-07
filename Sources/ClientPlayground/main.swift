@@ -1,22 +1,23 @@
 import Foundation
 import TransmissionSwiftRpcClient
 import Combine
+import Logging
 
-let client = TransmissionSwiftRpcClient(configuration: .default)
-let params = GetTorrentRequestArguments(ids: nil, fields: ["name", "hashString", "id"], format: .objects)
+var logger = Logger(label: "TransmissionSwiftRpcClient")
+logger.logLevel = .debug
+
+let client = TransmissionSwiftRpcClient(configuration: .default, logger: logger)
 
 var cancels: [AnyCancellable] = []
-client.getTorrent(params).sink(receiveCompletion: { (completion) in
-  print(completion)
+client.getFullTorrent(ids: .allTorrents).sink(receiveCompletion: { (completion) in
+  // noop
 }) { (response) in
   switch response.result {
   case .success:
-    let arguments = response.arguments!
-    print(dump(arguments))
+    logger.log(level: .info, "Success")
   case .failure(let error):
-    print(error)
+    logger.log(level: .error, "Failure: \(error)")
   }
-  print(response)
 }.store(in: &cancels)
 
 RunLoop.main.run()

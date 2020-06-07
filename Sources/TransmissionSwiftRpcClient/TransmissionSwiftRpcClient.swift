@@ -1,6 +1,7 @@
 import Networker
 import Combine
 import Foundation
+import Logging
 
 public class TransmissionSwiftRpcClient {
   public struct Configuration {
@@ -23,6 +24,7 @@ public class TransmissionSwiftRpcClient {
     }
   }
 
+  public let logger: Logger?
   private let configuration: Configuration
   private let dispatcher: Networker.Dispatcher
 
@@ -31,15 +33,22 @@ public class TransmissionSwiftRpcClient {
 
   public init(
     configuration: Configuration,
-    dispatcher: Networker.Dispatcher
+    dispatcher: Networker.Dispatcher,
+    logger: Logger?
   ) {
     self.configuration = configuration
     self.dispatcher = dispatcher
+    self.logger = logger
     dispatcher.add(sessionIdPluging())
   }
 
-  public convenience init(configuration: Configuration = .default) {
-    self.init(configuration: configuration, dispatcher: Self.createDispatcher())
+  public convenience init(configuration: Configuration = .default,
+                          logger: Logger? = nil) {
+    self.init(
+      configuration: configuration,
+      dispatcher: Self.createDispatcher(logger: logger),
+      logger: logger
+    )
   }
 
   internal func rpc<RequestArguments, ResponseArguments>(
@@ -81,9 +90,10 @@ public class TransmissionSwiftRpcClient {
     }.eraseToAnyPublisher()
   }
 
-  private static func createDispatcher() -> Dispatcher {
+  private static func createDispatcher(logger: Logger?) -> Dispatcher {
     URLSessionDispatcher(jsonBodyEncoder: JSONEncoder(),
-                         plugins: [])
+                         plugins: [],
+                         logger: logger)
   }
 
   private func sessionIdPluging() -> DispatcherPlugin {
