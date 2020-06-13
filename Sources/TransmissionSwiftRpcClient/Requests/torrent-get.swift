@@ -25,7 +25,7 @@ private struct GetFullTorrentRequestArguments: Encodable {
     ids: TransmissionIdsRequestParameter
   ) {
     self.ids = ids
-    self.fields = ["name", "hashString", "id", "activityDate"]
+    self.fields = Self.allTorrentFields
     self.format = .objects
   }
 }
@@ -51,5 +51,35 @@ public extension TransmissionSwiftRpcClient {
     tag: TransmissionRequestTag? = nil
   ) -> AnyPublisher<TransmissionResponse<GetFullTorrentResponseArguments>, Error> {
     rpc(method: .getTorrent, tag: tag, arguments: GetFullTorrentRequestArguments(ids: ids))
+  }
+}
+
+private extension GetFullTorrentRequestArguments {
+  static var allTorrentFields: [String] {
+    [
+      "name",
+      "hashString",
+      "id",
+      "activityDate",
+      "addedDate",
+      "bandwidthPriority",
+      "comment",
+      "corruptEver",
+      "creator",
+      "dateCreated",
+      "desiredAvailable",
+      "doneDate",
+      "downloadDir",
+      "downloadedEver",
+      "downloadLimit",
+      "downloadLimited",
+      "editDate",
+      "error",
+      "errorString",
+      "eta",
+      "etaIdle",
+      "files",
+      "fileStats",
+    ]
   }
 }

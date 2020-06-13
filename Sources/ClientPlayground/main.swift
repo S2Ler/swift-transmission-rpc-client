@@ -10,10 +10,11 @@ let client = TransmissionSwiftRpcClient(configuration: .default, logger: logger)
 
 var cancels: [AnyCancellable] = []
 client.getFullTorrent(ids: .allTorrents).sink(receiveCompletion: { (completion) in
-  // noop
+  logger.log(level: .info, "Completion called: \(completion)")
 }) { (response) in
   switch response.result {
   case .success:
+    logger.log(level: .debug, "\(response.arguments!)")
     logger.log(level: .info, "Success")
   case .failure(let error):
     logger.log(level: .error, "Failure: \(error)")
