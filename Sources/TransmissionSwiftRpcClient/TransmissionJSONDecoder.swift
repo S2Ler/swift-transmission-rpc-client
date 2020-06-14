@@ -29,6 +29,8 @@ internal final class TransmissionJSONDecoder: JSONDecoder {
       switch lastKey.stringValue {
       case "hashString":
         return CustomCodingKey(stringValue: "hash")!
+      case "peer-limit":
+        return CustomCodingKey(stringValue: "peerLimit")!
       default:
         return lastKey
       }

@@ -23,6 +23,12 @@ public struct DecodeAsNilIf<T: Decodable, Predicate: DecodeAsNilIfPredicate>: De
   }
 }
 
+extension DecodeAsNilIf: CustomStringConvertible where T: CustomStringConvertible {
+  public var description: String {
+    wrappedValue?.description ?? "nil"
+  }
+}
+
 // MARK: - Implementations
 
 public struct DecodeAsNilForTimeInterval: DecodeAsNilIfPredicate {
@@ -34,5 +40,11 @@ public struct DecodeAsNilForTimeInterval: DecodeAsNilIfPredicate {
 public struct DecodeAsNilIfEmptyString: DecodeAsNilIfPredicate {
   public static func decodeAsNilIfPredicate(subject: String) -> Bool {
     subject.isEmpty
+  }
+}
+
+public struct DecodeAsNilForDate: DecodeAsNilIfPredicate {
+  public static func decodeAsNilIfPredicate(subject: Date) -> Bool {
+    subject.timeIntervalSince1970 == -1
   }
 }
