@@ -3,6 +3,7 @@ import Foundation
 internal enum RpcMethod: Encodable {
   case addTorrent
   case getTorrent
+  case setTorrentLocation
   case custom(String)
 
   func encode(to encoder: Encoder) throws {
@@ -18,6 +19,8 @@ private extension RpcMethod {
       return "torrent-add"
     case .getTorrent:
       return "torrent-get"
+    case .setTorrentLocation:
+      return "torrent-set-location"
     case .custom(let customMethod):
       return customMethod
     }

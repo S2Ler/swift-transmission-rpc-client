@@ -4,4 +4,10 @@
 
 ## Supported operations
 - [x] torrent-add
-- [ ] torrent-get
+- [x] torrent-get
+- [x] torrent-set-location
+- [ ] torrent-remove
+- [ ] torrent-rename-path
+
+## TODO
+- [ ] torrent-add support all parameters
