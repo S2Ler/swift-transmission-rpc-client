@@ -3,7 +3,7 @@ import TransmissionRpcClient
 import Combine
 import Logging
 
-var logger = Logger(label: "TransmissionSwiftRpcClient")
+var logger = Logger(label: "swift-transmission-rpc-client")
 logger.logLevel = .debug
 
 let client = TransmissionSwiftRpcClient(configuration: .default, logger: logger)
