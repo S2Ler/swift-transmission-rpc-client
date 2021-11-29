@@ -1,5 +1,5 @@
 import Foundation
-import TransmissionSwiftRpcClient
+import TransmissionRpcClient
 import Combine
 import Logging
 
@@ -9,16 +9,16 @@ logger.logLevel = .debug
 let client = TransmissionSwiftRpcClient(configuration: .default, logger: logger)
 
 var cancels: [AnyCancellable] = []
-client.getFullTorrent(ids: .allTorrents).sink(receiveCompletion: { (completion) in
-  logger.log(level: .info, "Completion called: \(completion)")
-}) { (response) in
-  switch response.result {
-  case .success:
-    logger.log(level: .debug, "\(response.arguments!)")
-    logger.log(level: .info, "Success")
-  case .failure(let error):
-    logger.log(level: .error, "Failure: \(error)")
-  }
-}.store(in: &cancels)
+
+Task {
+    do {
+        let response = try await client.getFullTorrent(ids: .allTorrents)
+        logger.log(level: .debug, "\(response.arguments!)")
+        logger.log(level: .info, "Success")
+    }
+    catch {
+        logger.log(level: .error, "Failure: \(error)")
+    }
+}
 
 RunLoop.main.run()

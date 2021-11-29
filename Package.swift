@@ -1,18 +1,18 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.5
 
 import PackageDescription
 
 let package = Package(
-  name: "TransmissionSwiftRpcClient",
+  name: "swift-transmission-rpc-client",
   platforms: [
-      .macOS(.v10_15),
-      .iOS(.v13),
-      .tvOS(.v13),
+      .macOS(.v12),
+      .iOS(.v15),
+      .tvOS(.v15),
   ],
   products: [
     .library(
-      name: "TransmissionSwiftRpcClient",
-      targets: ["TransmissionSwiftRpcClient"]),
+      name: "TransmissionRpcClient",
+      targets: ["TransmissionRpcClient"]),
     .executable(name: "ClientPlayground",
                 targets: ["ClientPlayground"])
   ],
@@ -21,10 +21,10 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "TransmissionSwiftRpcClient",
+      name: "TransmissionRpcClient",
       dependencies: ["Networker"]),
-    .target(
+    .executableTarget(
       name: "ClientPlayground",
-      dependencies: ["TransmissionSwiftRpcClient"]),
+      dependencies: ["TransmissionRpcClient"]),
   ]
 )

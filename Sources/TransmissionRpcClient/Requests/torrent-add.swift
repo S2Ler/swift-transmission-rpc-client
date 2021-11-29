@@ -59,7 +59,7 @@ public extension TransmissionSwiftRpcClient {
   func addTorrent(
     _ arguments: AddTorrentRequestArguments,
     tag: TransmissionRequestTag? = nil
-  ) -> AnyPublisher<TransmissionResponse<AddTorrentResponseArguments>, Error> {
-    rpc(method: .addTorrent, tag: tag, arguments: arguments)
+  ) async throws -> TransmissionResponse<AddTorrentResponseArguments> {
+    try await rpc(method: .addTorrent, tag: tag, arguments: arguments)
   }
 }

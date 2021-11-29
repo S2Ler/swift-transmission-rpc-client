@@ -30,7 +30,7 @@ public extension TransmissionSwiftRpcClient {
   func setTorrentLocation(
     _ arguments: SetTorrentLocationRequestArguments,
     tag: TransmissionRequestTag? = nil
-  ) -> AnyPublisher<TransmissionResponse<SetTorrentLocationResponseArguments>, Error> {
-    rpc(method: .setTorrentLocation, tag: tag, arguments: arguments)
+  ) async throws -> TransmissionResponse<SetTorrentLocationResponseArguments> {
+    try await rpc(method: .setTorrentLocation, tag: tag, arguments: arguments)
   }
 }

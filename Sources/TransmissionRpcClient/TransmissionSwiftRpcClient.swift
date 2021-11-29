@@ -55,7 +55,7 @@ public class TransmissionSwiftRpcClient {
     method: RpcMethod,
     tag: TransmissionRequestTag?,
     arguments: RequestArguments?
-  ) -> AnyPublisher<TransmissionResponse<ResponseArguments>, Error>
+  ) async throws -> TransmissionResponse<ResponseArguments>
     where
     RequestArguments: Encodable,
     ResponseArguments: Decodable
@@ -71,23 +71,20 @@ public class TransmissionSwiftRpcClient {
       timeout: configuration.timeout,
       cachePolicy: configuration.cachePolicy
     )
-    return dispatcher
-      .dispatch(request)
-      .catch { [unowned self] (error: Error) -> AnyPublisher<TransmissionResponse<ResponseArguments>, Error> in
-        if let transmissionError = error as? TransmissionError {
-          if case .statusCodeError(let httpResponse) = transmissionError,
-            httpResponse.statusCode == 409 {
-            self.sessionId = httpResponse.value(forHTTPHeaderField: "X-Transmission-Session-Id") ?? ""
-            return self.dispatcher.dispatch(request)
-          }
-          else {
-            return Fail(error: transmissionError).eraseToAnyPublisher()
-          }
-        }
-        else {
-          return Fail(error: error).eraseToAnyPublisher()
-        }
-    }.eraseToAnyPublisher()
+    do {
+      return try await dispatcher.dispatch(request)
+    }
+    catch {
+      if let transmissionError = error as? TransmissionError,
+         case .statusCodeError(let httpResponse) = transmissionError,
+         httpResponse.statusCode == 409 {
+        self.sessionId = httpResponse.value(forHTTPHeaderField: "X-Transmission-Session-Id") ?? ""
+        return try await dispatcher.dispatch(request)
+      }
+      else {
+        throw error
+      }
+    }
   }
 
   private static func createDispatcher(logger: Logger?) -> Dispatcher {

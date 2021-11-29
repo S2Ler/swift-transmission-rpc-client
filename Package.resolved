@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/diejmon/Networker.git",
         "state": {
           "branch": "master",
-          "revision": "185a24481c017fb09577fdb90efb447f9a10274d",
+          "revision": "e61a64b5f1d7e1d2a7b0d41eee00aa2a7aab950a",
           "version": null
         }
       },
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
           "branch": null,
-          "revision": "74d7b91ceebc85daf387ebb206003f78813f71aa",
-          "version": "1.2.0"
+          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+          "version": "1.4.2"
         }
       }
     ]

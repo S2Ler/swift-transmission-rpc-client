@@ -42,15 +42,15 @@ public extension TransmissionSwiftRpcClient {
   func getTorrent<CustomTorrent: Decodable> (
     _ arguments: GetTorrentRequestArguments,
     tag: TransmissionRequestTag? = nil
-  ) -> AnyPublisher<TransmissionResponse<GetTorrentResponseArguments<CustomTorrent>>, Error> {
-    rpc(method: .getTorrent, tag: tag, arguments: arguments)
+  ) async throws -> TransmissionResponse<GetTorrentResponseArguments<CustomTorrent>> {
+    try await rpc(method: .getTorrent, tag: tag, arguments: arguments)
   }
 
   func getFullTorrent(
     ids: TransmissionIdsRequestParameter,
     tag: TransmissionRequestTag? = nil
-  ) -> AnyPublisher<TransmissionResponse<GetFullTorrentResponseArguments>, Error> {
-    rpc(method: .getTorrent, tag: tag, arguments: GetFullTorrentRequestArguments(ids: ids))
+  ) async throws -> TransmissionResponse<GetFullTorrentResponseArguments> {
+    try await rpc(method: .getTorrent, tag: tag, arguments: GetFullTorrentRequestArguments(ids: ids))
   }
 }
 
